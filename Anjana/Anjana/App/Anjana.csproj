@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Anjana</AssemblyName>
+    <RootNamespace>Anjana</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\assets\anjana.ico</ApplicationIcon>
+    <Product>Anjana</Product>
+    <Company>Bijoy</Company>
+    <Description>Built with love and care</Description>
+    <Version>1.0.0</Version>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\Shared\AppInfo.cs" Link="AppInfo.cs" />
+  </ItemGroup>
+</Project>

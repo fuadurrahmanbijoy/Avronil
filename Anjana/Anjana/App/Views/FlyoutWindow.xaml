@@ -1,0 +1,133 @@
+<Window x:Class="Anjana.Views.FlyoutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:Anjana.Controls"
+        Title="Anjana" Width="320" SizeToContent="Height" Left="-10000" Top="-10000"
+        WindowStartupLocation="Manual" WindowStyle="None" ResizeMode="NoResize" ShowInTaskbar="False"
+        Topmost="True" Background="Transparent" UseLayoutRounding="True" SnapsToDevicePixels="True"
+        FontFamily="Segoe UI Variable Text, Segoe UI" FontSize="12"
+        Foreground="{DynamicResource TextPrimary}">
+
+    <Window.Resources>
+        <Style x:Key="Glyph" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="Caption" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource CardFill}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardStroke}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="12"/>
+        </Style>
+    </Window.Resources>
+
+    <Border x:Name="Root" BorderThickness="1" BorderBrush="{DynamicResource CardStroke}">
+        <StackPanel Margin="16">
+
+            <!-- Header: adapter + settings toggle -->
+            <Grid Height="36">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock x:Name="AdapterIcon" Style="{StaticResource Glyph}" FontSize="18"
+                               Foreground="{DynamicResource TextSecondary}" Text="&#xE839;"/>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock x:Name="AdapterName" FontSize="14" FontWeight="SemiBold" Text="Network"/>
+                        <TextBlock x:Name="StatusText" Style="{StaticResource Caption}" Text="Connected"/>
+                    </StackPanel>
+                </StackPanel>
+                <Button x:Name="GearButton" Style="{StaticResource SubtleIconButton}" HorizontalAlignment="Right"
+                        Content="&#xE713;" Click="Gear_Click"/>
+            </Grid>
+
+            <!-- Download -->
+            <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+                <StackPanel>
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource Glyph}" FontSize="11" Text="&#xE74B;" Foreground="{DynamicResource DownBrush}"/>
+                            <TextBlock Style="{StaticResource Caption}" Text="Download" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <TextBlock x:Name="DownBig" FontSize="22" FontWeight="SemiBold" Text="0"
+                                       Typography.NumeralAlignment="Tabular"/>
+                            <TextBlock x:Name="DownBigUnit" Style="{StaticResource Caption}" Text="KB/s"
+                                       VerticalAlignment="Bottom" Margin="5,0,0,4"/>
+                        </StackPanel>
+                    </Grid>
+                    <c:Sparkline x:Name="DownGraph" Height="44" Margin="0,8,0,0" Stroke="{DynamicResource DownBrush}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Upload -->
+            <Border Style="{StaticResource Card}" Margin="0,8,0,0">
+                <StackPanel>
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource Glyph}" FontSize="11" Text="&#xE74A;" Foreground="{DynamicResource UpBrush}"/>
+                            <TextBlock Style="{StaticResource Caption}" Text="Upload" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <TextBlock x:Name="UpBig" FontSize="22" FontWeight="SemiBold" Text="0"
+                                       Typography.NumeralAlignment="Tabular"/>
+                            <TextBlock x:Name="UpBigUnit" Style="{StaticResource Caption}" Text="KB/s"
+                                       VerticalAlignment="Bottom" Margin="5,0,0,4"/>
+                        </StackPanel>
+                    </Grid>
+                    <c:Sparkline x:Name="UpGraph" Height="44" Margin="0,8,0,0" Stroke="{DynamicResource UpBrush}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Session totals -->
+            <Grid Margin="0,14,0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Caption}" Text="Received this session"/>
+                    <TextBlock x:Name="TotalDown" FontSize="14" FontWeight="SemiBold" Margin="0,2,0,0" Text="0 B"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Style="{StaticResource Caption}" Text="Sent this session"/>
+                    <TextBlock x:Name="TotalUp" FontSize="14" FontWeight="SemiBold" Margin="0,2,0,0" Text="0 B"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Settings (collapsed by default) -->
+            <StackPanel x:Name="SettingsPanel" Visibility="Collapsed">
+                <Border Height="1" Background="{DynamicResource Divider}" Margin="0,12,0,8"/>
+
+                <Grid Height="40">
+                    <TextBlock Text="Speed units" VerticalAlignment="Center"/>
+                    <Border HorizontalAlignment="Right" VerticalAlignment="Center" CornerRadius="6" Padding="2"
+                            Background="{DynamicResource CardFill}" BorderBrush="{DynamicResource CardStroke}" BorderThickness="1">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="UnitBytes" GroupName="unit" Content="Bytes  MB/s" Style="{StaticResource SegmentRadio}" Checked="Unit_Checked" Tag="Bytes"/>
+                            <RadioButton x:Name="UnitBits" GroupName="unit" Content="Bits  Mbps" Style="{StaticResource SegmentRadio}" Checked="Unit_Checked" Tag="Bits"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Grid Height="40">
+                    <TextBlock Text="Lock position" VerticalAlignment="Center"/>
+                    <ToggleButton x:Name="LockToggle" Style="{StaticResource SwitchToggle}" HorizontalAlignment="Right"
+                                  VerticalAlignment="Center" Checked="Lock_Changed" Unchecked="Lock_Changed"/>
+                </Grid>
+
+                <Grid Height="40">
+                    <TextBlock Text="Start with Windows" VerticalAlignment="Center"/>
+                    <ToggleButton x:Name="StartupToggle" Style="{StaticResource SwitchToggle}" HorizontalAlignment="Right"
+                                  VerticalAlignment="Center" Checked="Startup_Changed" Unchecked="Startup_Changed"/>
+                </Grid>
+
+                <Button Style="{StaticResource StandardButton}" Content="Quit Anjana" Margin="0,8,0,0" Click="Quit_Click"/>
+                <TextBlock Style="{StaticResource Caption}" HorizontalAlignment="Center" Margin="0,14,0,0" Opacity="0.75"
+                           Text="Built with love and care  ·  Bijoy"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>
